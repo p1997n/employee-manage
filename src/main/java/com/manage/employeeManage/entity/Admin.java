@@ -17,7 +17,7 @@ public class Admin {
     @Id
     @Column(name = "admin_id",length = 10)
     private int adminId;
-    @Column(name = "admin_username",length = 200,nullable = false)
+    @Column(name = "admin_username",length = 200,nullable = false,unique = true)
     private String adminUsername;
     @Column(name = "admin_password",length = 100,nullable = false)
     private String adminPassword;

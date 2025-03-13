@@ -12,7 +12,19 @@ public class AdminController {
     private AdminService adminService;
     @PostMapping(path = "/add-admin")
     public String addAdmin(@RequestBody AdminDto adminDto){
-        adminService.addAdmin(adminDto);
-        return "Saved";
+        String saveAdmin = adminService.addAdmin(adminDto);
+        return saveAdmin;
+
     }
+
+    @PostMapping(path = "/admin-login")
+    public String logAdmin(@RequestBody AdminDto adminDto){
+        boolean isAuthenticated = adminService.authenticateAdmin(adminDto.getAdminUsername(),adminDto.getAdminPassword());
+        if(isAuthenticated){
+            return "Login Successfully";
+        }else{
+            return "Incorrect username or password";
+        }
+    }
+
 }

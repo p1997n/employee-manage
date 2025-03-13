@@ -7,6 +7,8 @@ import com.manage.employeeManage.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
@@ -18,6 +20,16 @@ public class AdminServiceImpl implements AdminService {
         }else{
             adminRepo.save(admin);
             return "Admin saved";
+        }
+    }
+
+    public boolean authenticateAdmin(String username, String password){
+        Optional<Admin> adminOptional = adminRepo.findByAdminUsername(username);
+        if(adminOptional.isPresent()){
+            Admin admin = adminOptional.get();
+            return password.equals(admin.getAdminPassword());
+        }else {
+            return false;
         }
     }
 
