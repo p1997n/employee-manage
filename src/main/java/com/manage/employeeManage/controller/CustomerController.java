@@ -2,6 +2,7 @@ package com.manage.employeeManage.controller;
 
 
 import com.manage.employeeManage.dto.CustomerDto;
+import com.manage.employeeManage.dto.SalaryDto;
 import com.manage.employeeManage.entity.Customer;
 import com.manage.employeeManage.dto.response.CustomerResponse;
 import com.manage.employeeManage.service.CustomerService;
@@ -18,8 +19,8 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping(path = "/add-customer")
-    public String addCustomer(@RequestBody CustomerDto customerDto){
-        String customerSaved = customerService.addCustomer(customerDto);
+    public String addCustomer(@RequestBody CustomerDto customerDto, SalaryDto salaryDto){
+        String customerSaved = customerService.addCustomer(customerDto,salaryDto);
         return customerSaved;
     }
 

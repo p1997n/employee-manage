@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -21,6 +23,11 @@ public class Customer{
     private String customerPassword;
     @Column(name = "customer_deleted", nullable = false)
     private boolean CustomerDeleted=false;
-
+    @Column(name="customer_createddatetime")
+    private LocalDateTime customerCreatedDateTime;
+    @Column(name = "customer_modifieddatetime")
+    private LocalDateTime customerModifiedDateTime;
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    private Salary salary;
 
 }
