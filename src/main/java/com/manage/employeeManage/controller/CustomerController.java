@@ -2,8 +2,6 @@ package com.manage.employeeManage.controller;
 
 
 import com.manage.employeeManage.dto.CustomerDto;
-import com.manage.employeeManage.dto.SalaryDto;
-import com.manage.employeeManage.dto.request.CustomerAddRequest;
 import com.manage.employeeManage.entity.Customer;
 import com.manage.employeeManage.dto.response.CustomerResponse;
 import com.manage.employeeManage.service.CustomerService;
@@ -24,7 +22,6 @@ public class CustomerController {
         String saveCustomer = customerService.addCustomer(customerDto);
         return saveCustomer;
     }
-
 
     @GetMapping(path = "/search-customer")
     public CustomerResponse searchCustomerByUserName(@RequestParam String username){

@@ -16,5 +16,4 @@ public class SalaryDto {
     private double salaryEtf;
     private double salaryTax;
     private LocalDateTime salaryUpdateDate;
-
 }

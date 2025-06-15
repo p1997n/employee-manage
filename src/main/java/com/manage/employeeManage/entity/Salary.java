@@ -29,5 +29,4 @@ public class Salary {
     private double salaryTax;
     @Column(name = "salary_update_date")
     private LocalDateTime salaryUpdateDate;
-
 }

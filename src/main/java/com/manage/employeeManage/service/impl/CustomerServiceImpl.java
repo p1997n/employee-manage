@@ -1,6 +1,7 @@
 package com.manage.employeeManage.service.impl;
 
 import com.manage.employeeManage.dto.CustomerDto;
+import com.manage.employeeManage.dto.SalaryDto;
 import com.manage.employeeManage.entity.Customer;
 import com.manage.employeeManage.entity.Salary;
 import com.manage.employeeManage.repo.CustomerRepo;
@@ -21,6 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private SalaryRepo salaryRepo;
 
+
     public String addCustomer(CustomerDto customerDto){
         if(customerRepo.existsByCustomerUsername(customerDto.getCustomerUsername())){
             return "Customer already exists";
@@ -40,7 +42,8 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setSalary(salary);
             customerRepo.save(customer);
             return "Customer added successfully";
-        }
+
+            }
 
     }
 
