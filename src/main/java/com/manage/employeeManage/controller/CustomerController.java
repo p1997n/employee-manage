@@ -3,6 +3,7 @@ package com.manage.employeeManage.controller;
 
 import com.manage.employeeManage.dto.CustomerDto;
 import com.manage.employeeManage.dto.SalaryDto;
+import com.manage.employeeManage.dto.request.CustomerAddRequest;
 import com.manage.employeeManage.entity.Customer;
 import com.manage.employeeManage.dto.response.CustomerResponse;
 import com.manage.employeeManage.service.CustomerService;
@@ -19,30 +20,20 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping(path = "/add-customer")
-    public String addCustomer(@RequestBody CustomerDto customerDto, SalaryDto salaryDto){
-        String customerSaved = customerService.addCustomer(customerDto,salaryDto);
-        return customerSaved;
+    public String addCustomer(@RequestBody CustomerDto customerDto) {
+        String saveCustomer = customerService.addCustomer(customerDto);
+        return saveCustomer;
     }
 
-//    @GetMapping(path = "/search-customer")
-//    public ResponseEntity<Customer> searchCustomerByUsername(@RequestParam String username){
-//        Optional<Customer> customer = customerService.searchCustomerByUserName(username);
-//        if(customer.isPresent()){
-//            return ResponseEntity.ok(customer.get());
-//        }else{
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//    }
 
     @GetMapping(path = "/search-customer")
     public CustomerResponse searchCustomerByUserName(@RequestParam String username){
         Optional<Customer> customer = customerService.searchCustomerByUserName(username);
         if(customer.isPresent()) {
-            CustomerResponse searchCustomer = new CustomerResponse(customer.get(),200);
+            CustomerResponse searchCustomer = new CustomerResponse(200,customer.get());
             return searchCustomer;
         }else{
-            return new CustomerResponse("Customer doesn't exist",400);
+            return new CustomerResponse(400,"Customer doesn't exist");
         }
 
     }

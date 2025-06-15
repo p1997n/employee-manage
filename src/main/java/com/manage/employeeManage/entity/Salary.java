@@ -29,7 +29,5 @@ public class Salary {
     private double salaryTax;
     @Column(name = "salary_update_date")
     private LocalDateTime salaryUpdateDate;
-    @OneToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+
 }

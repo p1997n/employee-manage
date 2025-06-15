@@ -1,7 +1,6 @@
 package com.manage.employeeManage.service.impl;
 
 import com.manage.employeeManage.dto.CustomerDto;
-import com.manage.employeeManage.dto.SalaryDto;
 import com.manage.employeeManage.entity.Customer;
 import com.manage.employeeManage.entity.Salary;
 import com.manage.employeeManage.repo.CustomerRepo;
@@ -22,56 +21,52 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private SalaryRepo salaryRepo;
 
-    public String addCustomer(CustomerDto customerDto, SalaryDto salaryDto){
-
+    public String addCustomer(CustomerDto customerDto){
         if(customerRepo.existsByCustomerUsername(customerDto.getCustomerUsername())){
-            return customerDto.getCustomerUsername()  + " Customer Already exist in System";
+            return "Customer already exists";
         }else{
+            Salary salary = new Salary();
+            salary.setSalaryBasic(customerDto.getSalary().getSalaryBasic());
+            salary.setSalaryAllowance(customerDto.getSalary().getSalaryAllowance());
+            salary.setSalaryUpdateDate(LocalDateTime.now());
+            salary.setSalaryEpf(customerDto.getSalary().getSalaryEpf());
+            salary.setSalaryEtf(customerDto.getSalary().getSalaryEtf());
+            salary.setSalaryTax(customerDto.getSalary().getSalaryTax());
+            salaryRepo.save(salary);
             Customer customer = new Customer();
-            customer.setCustomerId(customerDto.getCustomerId());
-            customer.setCustomerDeleted(customerDto.isCustomerDeleted());
             customer.setCustomerUsername(customerDto.getCustomerUsername());
             customer.setCustomerPassword(customerDto.getCustomerPassword());
-            customer.setCustomerCreatedDateTime(customerDto.getCustomerCreatedDateTime());
-            customer.setCustomerModifiedDateTime(customerDto.getCustomerModifiedDateTime());
-            if(customerDto.getSalaryId()==salaryDto.getSalaryId()) {
-                Salary salary = new Salary();
-                salary.setSalaryBasic(salaryDto.getSalaryBasic());
-                salary.setSalaryAllowance(salaryDto.getSalaryAllowance());
-                salary.setSalaryEpf(salaryDto.getSalaryEpf());
-                salary.setSalaryEtf(salaryDto.getSalaryEtf());
-                salary.setSalaryId(salaryDto.getSalaryId());
-                salary.setSalaryTax(salaryDto.getSalaryTax());
-                customer.setSalary(salary);
-                salary.setCustomer(customer);
-                salaryRepo.save(salary);
-            }
-
+            customer.setCustomerCreatedDateTime(LocalDateTime.now());
+            customer.setSalary(salary);
             customerRepo.save(customer);
-            return customerDto.getCustomerUsername() +" Customer Saved Successfully!";
+            return "Customer added successfully";
         }
-
 
     }
 
     public Optional<Customer> searchCustomerByUserName(String username){
-        return  customerRepo.findByCustomerUsername(username);
+        Optional<Customer> customer = customerRepo.findByCustomerUsername(username);
+        return customer;
     }
 
     public String updateCustomerDetails(int id, CustomerDto customerDto){
-        if(customerRepo.existsById(id)){
-            Customer customer = customerRepo.getById(id);
-            if((customer.getCustomerUsername()).equals(customerDto.getCustomerUsername())){
-                customer.setCustomerPassword(customerDto.getCustomerPassword());
-                customer.setCustomerModifiedDateTime(LocalDateTime.now());
-                customerRepo.save(customer);
-                return id + " Updated Successfully!";
-            }else{
-                return "Customer "+id +" and " + customerDto.getCustomerUsername() + " does not match";
-            }
+        Optional<Customer> customer = customerRepo.findById(id);
+        if (customer.isPresent() & !customer.get().isCustomerDeleted()) {
+            customer.get().setCustomerPassword(customerDto.getCustomerPassword());
+            customer.get().setCustomerModifiedDateTime(LocalDateTime.now());
+            Salary salary = customer.get().getSalary();
+            salary.setSalaryBasic(customerDto.getSalary().getSalaryBasic());
+            salary.setSalaryAllowance(customerDto.getSalary().getSalaryAllowance());
+            salary.setSalaryEpf(customerDto.getSalary().getSalaryEpf());
+            salary.setSalaryEtf(customerDto.getSalary().getSalaryEtf());
+            salary.setSalaryTax(customerDto.getSalary().getSalaryTax());
+            salary.setSalaryUpdateDate(LocalDateTime.now());
+            salaryRepo.save(salary);
+            customerRepo.save(customer.get());
+            return "Customer updated successfully";
 
-        }else{
-            return id + " Customer Does Not exist system!";
+        } else {
+            return "Customer not found";
         }
 
     }
@@ -79,11 +74,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public String deleteCustomerById(int id){
-        if(customerRepo.existsById(id)){
-            customerRepo.customerSoftDel(id);
-            return "Customer Deleted";
-        }else{
+        Optional<Customer> customer = customerRepo.findById(id);
+        if(!(customer.isPresent() & !customer.get().isCustomerDeleted())){
             return "Customer doesn't exist";
+        }else{
+            customerRepo.customerSoftDel(id);
+            return "Customer deleted successfully";
         }
 
     }

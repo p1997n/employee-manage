@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_id",length = 100,nullable = false)
+    @Column(name = "customer_id",length = 1000,nullable = false)
     private int customerId;
     @Column(name = "customer_username",length = 1000,nullable = false, unique = true)
     private String customerUsername;
@@ -27,7 +27,8 @@ public class Customer{
     private LocalDateTime customerCreatedDateTime;
     @Column(name = "customer_modifieddatetime")
     private LocalDateTime customerModifiedDateTime;
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "salary_id")
     private Salary salary;
 
 }

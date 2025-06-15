@@ -39,12 +39,12 @@ public class CustomerResponse{
         this.code = code;
     }
 
-    public CustomerResponse(Customer customer, int code) {
+    public CustomerResponse(int code,Customer customer) {
         this.customer = customer;
         this.code = code;
     }
 
-    public CustomerResponse(String message, int code) {
+    public CustomerResponse(int code,String message) {
         this.message = message;
         this.code = code;
     }

@@ -7,7 +7,7 @@ import com.manage.employeeManage.entity.Customer;
 import java.util.Optional;
 
 public interface CustomerService {
-    public String addCustomer(CustomerDto customerDto, SalaryDto salaryDto);
+    public String addCustomer(CustomerDto customerDto);
     public Optional<Customer> searchCustomerByUserName(String username);
 
     public String updateCustomerDetails(int id, CustomerDto customerDto);
