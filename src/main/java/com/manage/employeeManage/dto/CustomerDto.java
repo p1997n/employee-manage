@@ -19,5 +19,6 @@ public class CustomerDto{
     private boolean CustomerDeleted=false;
     private LocalDateTime customerModifiedDateTime;
     private LocalDateTime customerCreatedDateTime;
+    private String phoneNumber;
     private Salary salary;
 }

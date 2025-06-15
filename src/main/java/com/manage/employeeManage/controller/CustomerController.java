@@ -18,8 +18,8 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping(path = "/add-customer")
-    public String addCustomer(@RequestBody CustomerDto customerDto) {
-        String saveCustomer = customerService.addCustomer(customerDto);
+    public CustomerResponse addCustomer(@RequestBody CustomerDto customerDto) {
+        CustomerResponse saveCustomer = customerService.addCustomer(customerDto);
         return saveCustomer;
     }
 

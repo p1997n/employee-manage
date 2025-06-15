@@ -28,6 +28,8 @@ public class Customer{
     private LocalDateTime customerModifiedDateTime;
     @Column(name = "customer_created_datetime")
     private LocalDateTime customerCreatedDateTime;
+    @Column(name = "customer_phone_number")
+    private String phoneNumber;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "salary_id")
     private Salary salary;

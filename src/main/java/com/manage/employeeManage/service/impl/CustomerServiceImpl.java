@@ -1,12 +1,13 @@
 package com.manage.employeeManage.service.impl;
 
 import com.manage.employeeManage.dto.CustomerDto;
-import com.manage.employeeManage.dto.SalaryDto;
+import com.manage.employeeManage.dto.response.CustomerResponse;
 import com.manage.employeeManage.entity.Customer;
 import com.manage.employeeManage.entity.Salary;
 import com.manage.employeeManage.repo.CustomerRepo;
 import com.manage.employeeManage.repo.SalaryRepo;
 import com.manage.employeeManage.service.CustomerService;
+import com.manage.employeeManage.util.InputValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +23,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private SalaryRepo salaryRepo;
 
+    @Autowired
+    InputValidator inputValidator;
 
-    public String addCustomer(CustomerDto customerDto){
+
+    public CustomerResponse addCustomer(CustomerDto customerDto){
         if(customerRepo.existsByCustomerUsername(customerDto.getCustomerUsername())){
-            return "Customer already exists";
+            return new CustomerResponse(400,"Customer already exists");
+        }else if(inputValidator.validateCustomerName(customerDto.getCustomerUsername())) {
+            return new CustomerResponse(101, "Name must be between 3 and 10 characters");
+        }else if(inputValidator.validatePhoneNumber(customerDto.getPhoneNumber())){
+            return new CustomerResponse(102,"Phone number is invalid");
         }else{
             Salary salary = new Salary();
             salary.setSalaryBasic(customerDto.getSalary().getSalaryBasic());
@@ -39,12 +47,11 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setCustomerUsername(customerDto.getCustomerUsername());
             customer.setCustomerPassword(customerDto.getCustomerPassword());
             customer.setCustomerCreatedDateTime(LocalDateTime.now());
+            customer.setPhoneNumber(customerDto.getPhoneNumber());
             customer.setSalary(salary);
             customerRepo.save(customer);
-            return "Customer added successfully";
-
-            }
-
+            return new CustomerResponse(201,"Customer added successfully");
+        }
     }
 
     public Optional<Customer> searchCustomerByUserName(String username){
@@ -54,9 +61,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     public String updateCustomerDetails(int id, CustomerDto customerDto){
         Optional<Customer> customer = customerRepo.findById(id);
-        if (customer.isPresent() & !customer.get().isCustomerDeleted()) {
+        if (customer.isPresent() && !customer.get().isCustomerDeleted()) {
             customer.get().setCustomerPassword(customerDto.getCustomerPassword());
             customer.get().setCustomerModifiedDateTime(LocalDateTime.now());
+            customer.get().setPhoneNumber( customerDto.getPhoneNumber());
             Salary salary = customer.get().getSalary();
             salary.setSalaryBasic(customerDto.getSalary().getSalaryBasic());
             salary.setSalaryAllowance(customerDto.getSalary().getSalaryAllowance());
